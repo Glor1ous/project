@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Контакты - Универсальный сайт{% endblock %}
+
+{% block content %}
+<h1>Контакты</h1>
+<div class="row">
+    <div class="col-md-6">
+        <h3>Свяжитесь с нами</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="{{ form.name.id_for_label }}" class="form-label">Имя *</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="text-danger">{{ form.name.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.email.id_for_label }}" class="form-label">Email *</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="text-danger">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.phone.id_for_label }}" class="form-label">Телефон</label>
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                    <div class="text-danger">{{ form.phone.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.message.id_for_label }}" class="form-label">Сообщение *</label>
+                {{ form.message }}
+                {% if form.message.errors %}
+                    <div class="text-danger">{{ form.message.errors }}</div>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Отправить</button>
+        </form>
+        <p class="text-muted mt-2"><small>* - обязательные поля</small></p>
+    </div>
+    <div class="col-md-6">
+        <h3>Наши контакты</h3>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Адрес</h5>
+                <p class="card-text">г. Город, ул. Улица, д. 1, оф. 10</p>
+
+                <h5 class="card-title">Телефон</h5>
+                <p class="card-text">+7 (xxx) xxx-xx-xx</p>
+
+                <h5 class="card-title">Email</h5>
+                <p class="card-text">info@example.com</p>
+
+                <h5 class="card-title">Режим работы</h5>
+                <p class="card-text">
+                    Пн-Пт: 9:00 - 18:00<br>
+                    Сб: 10:00 - 16:00<br>
+                    Вс: выходной
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control {
+        margin-bottom: 0;
+    }
+</style>
+{% endblock %}

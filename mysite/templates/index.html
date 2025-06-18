@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная - Универсальный сайт{% endblock %}
+
+{% block content %}
+<div class="hero-section bg-primary text-white rounded p-5 mb-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h1 class="display-4">Добро пожаловать!</h1>
+            <p class="lead">Это универсальный шаблон сайта, который можно адаптировать под любой бизнес - магазин одежды, парикмахерская, кафе и многое другое.</p>
+            <a href="{% url 'services' %}" class="btn btn-light btn-lg">Наши услуги</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Качество</h5>
+                <p class="card-text">Мы предлагаем только лучшие товары и услуги высокого качества.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Опыт</h5>
+                <p class="card-text">Многолетний опыт работы и профессиональный подход к каждому клиенту.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Сервис</h5>
+                <p class="card-text">Индивидуальный подход и высокий уровень обслуживания.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

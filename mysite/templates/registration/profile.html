@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль - Универсальный сайт{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1>Профиль пользователя</h1>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Информация о пользователе</h5>
+                <p class="card-text">
+                    <strong>Имя пользователя:</strong> {{ user.username }}<br>
+                    <strong>Email:</strong> {{ user.email|default:"Не указан" }}<br>
+                    <strong>Дата регистрации:</strong> {{ user.date_joined|date:"d.m.Y H:i" }}<br>
+                    <strong>Последний вход:</strong> {{ user.last_login|date:"d.m.Y H:i" }}
+                </p>
+                <a href="#" class="btn btn-primary">Редактировать профиль</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Действия</h5>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'home' %}" class="btn btn-outline-primary">На главную</a>
+                    <a href="{% url 'services' %}" class="btn btn-outline-primary">Наши услуги</a>
+                    <a href="{% url 'contact' %}" class="btn btn-outline-primary">Контакты</a>
+                    <hr>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger">Выйти из аккаунта</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
