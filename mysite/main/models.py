@@ -1,35 +1,85 @@
+# main/models.py
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-# Пример модели для универсального использования
-class Category(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Название')
-    description = models.TextField(blank=True, verbose_name='Описание')
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
+class User(AbstractUser):
+    """Кастомная модель пользователя"""
+    full_name = models.CharField(max_length=200, verbose_name='ФИО')
+    phone = models.CharField(max_length=20, verbose_name='Телефон')
 
     def __str__(self):
-        return self.name
+        return self.full_name or self.username
 
-class Item(models.Model):
-    title = models.CharField(max_length=200, verbose_name='Название')
+
+class Course(models.Model):
+    """Модель курса"""
+    CATEGORY_CHOICES = [
+        ('programming', 'Программирование'),
+        ('design', 'Дизайн'),
+        ('marketing', 'Маркетинг'),
+        ('business', 'Бизнес'),
+        ('other', 'Другое'),
+    ]
+
+    title = models.CharField(max_length=200, verbose_name='Название курса')
     description = models.TextField(verbose_name='Описание')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
+    short_description = models.CharField(max_length=300, verbose_name='Краткое описание')
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, verbose_name='Категория')
+    duration = models.PositiveIntegerField(verbose_name='Длительность (часов)')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
-    image = models.ImageField(upload_to='items/', blank=True, verbose_name='Изображение')
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField(default=True, verbose_name='Активно')
+    image = models.ImageField(upload_to='courses/', blank=True, null=True, verbose_name='Изображение')
+    is_active = models.BooleanField(default=True, verbose_name='Активен')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
 
     class Meta:
-        verbose_name = 'Товар/Услуга'
-        verbose_name_plural = 'Товары/Услуги'
+        verbose_name = 'Курс'
+        verbose_name_plural = 'Курсы'
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.title
 
+
+class Application(models.Model):
+    """Модель заявки на обучение"""
+    STATUS_CHOICES = [
+        ('new', 'Новая'),
+        ('in_review', 'На рассмотрении'),
+        ('approved', 'Одобрена'),
+        ('rejected', 'Отклонена'),
+        ('cancelled', 'Отменена'),
+    ]
+
+    PAYMENT_CHOICES = [
+        ('cash', 'Наличные'),
+        ('card', 'Банковская карта'),
+        ('transfer', 'Банковский перевод'),
+        ('installment', 'Рассрочка'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new', verbose_name='Статус')
+    preferred_start_date = models.DateField(verbose_name='Желаемая дата начала')
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, verbose_name='Способ оплаты')
+    notes = models.TextField(blank=True, verbose_name='Примечания')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата подачи')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
+
+    class Meta:
+        verbose_name = 'Заявка'
+        verbose_name_plural = 'Заявки'
+        ordering = ['-created_at']
+        unique_together = ['user', 'course']
+
+    def __str__(self):
+        return f'{self.user.full_name} - {self.course.title}'
+
+
 class ContactMessage(models.Model):
+    """Модель сообщения обратной связи"""
     name = models.CharField(max_length=100, verbose_name='Имя')
     email = models.EmailField(verbose_name='Email')
     phone = models.CharField(max_length=20, blank=True, verbose_name='Телефон')
@@ -38,9 +88,9 @@ class ContactMessage(models.Model):
     is_read = models.BooleanField(default=False, verbose_name='Прочитано')
 
     class Meta:
-        verbose_name = 'Контактное сообщение'
-        verbose_name_plural = 'Контактные сообщения'
+        verbose_name = 'Сообщение'
+        verbose_name_plural = 'Сообщения'
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'{self.name} - {self.email} ({self.created_at.strftime("%d.%m.%Y %H:%M")})'
+        return f'{self.name} - {self.email}'
